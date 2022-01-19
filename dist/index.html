@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	
+			
+		<script src="./index.bundle.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/nis.css">
+		<!--<link rel="stylesheet" type="text/css" href="https://runeapps.org/nis/nis.css" />-->
+
+		
+		<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+		<script>
+			function changeImage(toggle) {
+				if (toggle.src.match("Deselect"))
+				{
+					toggle.src = './TooltipHeads/'+toggle.id+'.PNG'
+				}
+				else
+				{
+					toggle.src =  './TooltipHeads/'+toggle.id+'Deselect.PNG'
+				}
+				
+			}
+		</script>
+
+
+
+	</head>
+	
+
+<body class="nis body"  id="body" onload="TEST.start();">
+
+	<table class="table-style">
+		<th>
+			<div id ="Status"  ><p>Status: kill some wights</p></div> 	
+			<!--<div id ="spare"><p>Status: kill some wights</p></div>	
+			<div id ="canvastest"><p>Status: kill some wights</p></div>	
+			<div id ="canvastest2"><p>Status: kill some wights</p></div>		-->
+		</th>
+		<th>
+	<div class="container">
+		<div class="row">
+			  <div class="col">
+				<div id="settingsButton" title="Settings" type="button" class="nissmallimagebutton menubutton float-right" data-toggle="modal" data-target="#settings"></div>
+			  <br/><br/><br/>
+			</div>
+		</div>
+	</div>
+</th>
+
+	</table>
+			<!--<br/>
+				
+	<div id ="debug">nothing</div> 
+		<div id ="brosellist"><p>Status: kill some wights</p></div> 
+		<br/>
+		<div id ="nbrosellist"><p>Status: kill some wights</p></div> 
+		<br/>
+		<div id ="brolist"><p>Status: kill some wights</p></div> 
+		<br/> -->
+
+		<table class="image-VAK" >
+				<tr>
+					<th><img id="AkrisaeHTMLimg" src='./TooltipHeads/Akrisae.PNG'width = "80%"></th>
+				</tr>
+				<tr>
+					<th><img id="VeracHTMLimg" src='./TooltipHeads/Verac.PNG'width = "80%"></th>
+				</tr>
+		</table>
+
+		<table class="image-D">
+			<tr>
+				<th><img id="DharokHTMLimg" src='./TooltipHeads/Dharok.PNG';  width = "80%"></th>
+			</tr>
+		</table>
+		<table class="image-LA">
+			<tr>
+				
+				<th><img id="LinzaHTMLimg" src='./TooltipHeads/Linza.PNG'width = "80%"></th>
+			</tr>
+				<th><img id="AhrimHTMLimg" src='./TooltipHeads/Ahrim.PNG';  width = "80%"></th>
+			<tr>
+			</tr>
+		</table>
+		<table class="image-T">
+			<tr>
+				<th><img id="ToragHTMLimg" src='./TooltipHeads/Torag.PNG'width = "80%"></th>
+			</tr>
+		</table>
+
+		<table class="image-K">
+			<tr>
+				<th><img id="KarilHTMLimg" src='./TooltipHeads/Karil.PNG'width = "80%"></th>
+			</tr>
+		</table>
+
+
+
+		<table class="image-G">
+			<tr>
+				<th><img id="GuthanHTMLimg" src='./TooltipHeads/Guthan.PNG'width = "80%"></th>
+			</tr>
+		</table>
+
+
+<!-- Old layout, incase the new one looks shit -->
+		<!--<table class ="table-style">
+			<tr>
+				<th><img id="AkrisaeHTMLimg" src='./TooltipHeads/Akrisae.PNG'width = "95%"></th>
+				<th></th>
+				<th><img id="DharokHTMLimg" src='./TooltipHeads/Dharok.PNG';  width = "95%"></th>
+			</tr>
+			<tr>
+				<th>Akrisae</th>
+				<th></th>
+				<th>Dharok</th> 
+			</tr>
+			<tr>
+				<th><img id="VeracHTMLimg" src='./TooltipHeads/Verac.PNG'width = "95%"></th>
+				<th><img id="LinzaHTMLimg" src='./TooltipHeads/Linza.PNG'width = "95%"></th>
+				<th><img id="AhrimHTMLimg" src='./TooltipHeads/Ahrim.PNG';  width = "95%"></th>
+			</tr>
+			<tr>
+				<th>Verac</th>
+				<th>Linza</th>
+				<th>Ahrim</th> 
+			</tr>
+			<tr>
+				<th><img id="ToragHTMLimg" src='./TooltipHeads/Torag.PNG'width = "95%"></th>
+				<th><img id="KarilHTMLimg" src='./TooltipHeads/Karil.PNG'width = "95%"></th>
+				<th><img id="GuthanHTMLimg" src='./TooltipHeads/Guthan.PNG'width = "95%"></th>
+			</tr>
+			<tr>
+				<th>Torag</th>
+				<th>Karil</th>
+				<th>Guthan</th>
+			</tr>
+		</table>--> 
+		
+			
+				<!-- Settings Modal -->
+				
+		<div class="modal fade nis" tabindex="-1" id="settings" aria-labelledby="settingsLabel" style = "display: none;" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<h6 class="modal-title" id="settingsLabel"><b>Settings</b></h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"> <!-- onclick= "TEST.changesettings()"  >  -->
+						<span aria-hidden="true">&times;</span>
+					</button>
+					</div>
+					<div class="modal-body">
+						
+						<div class="row">
+							<div class="col">
+								<p>Select which brothers you intend to kill here</p>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col" title="Select which brothers you intend to kill here" style="margin-top:-7px;">
+								
+								
+								<table style="width:220px; height:220px;">
+									<tr>
+										
+										<th> <input type="image" id="Akrisae" src="./TooltipHeads/Akrisae.PNG" width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button>	</th>
+										<th></th>
+										<th><input type="image" id="Dharok" src='./TooltipHeads/Dharok.PNG'  width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button> </th>
+									</tr>
+									<tr>
+										<th>Akrisae</th>
+										<th></th>
+										<th>Dharok</th>
+									</tr>
+									<tr>
+										<th><input type="image" id="Verac" src='./TooltipHeads/Verac.PNG' width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button> </th>
+										<th><input type="image" id="Linza" src='./TooltipHeads/Linza.PNG' width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button> </th>
+										<th><input type="image" id="Ahrim" src='./TooltipHeads/Ahrim.PNG' width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button> </th>
+									</tr>
+									<tr>
+										<th>Verac</th>
+										<th>Linza</th>
+										<th>Ahrim</th>
+									</tr>
+									<tr>
+										<th><input type="image" id="Torag" src='./TooltipHeads/Torag.PNG' width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button>  </th>
+										<th><input type="image" id="Karil" src='./TooltipHeads/Karil.PNG' width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button>  </th>
+										<th><input type="image" id="Guthan" src='./TooltipHeads/Guthan.PNG' width = "80%"  onclick="TEST.changesettings(this); changeImage(this);"></button> </th>
+									</tr>
+									<tr>
+										<th>Torag</th>
+										<th>Karil</th>
+										<th>Guthan</th>
+									</tr>
+
+								</table>
+
+
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</body>
+</html>
