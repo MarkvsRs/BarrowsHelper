@@ -1,0 +1,397 @@
+//alt1 base libs, provides all the commonly used methods for image matching and capture
+//also gives your editor info about the window.alt1 api
+import * as a1lib from "@alt1/base";
+import { ImgRef } from "@alt1/base";
+import { lookup } from "dns";
+import { stringify } from "querystring";
+
+//tell webpack to add index.html and appconfig.json to output
+require("!file-loader?name=[name].[ext]!./index.html");
+require("!file-loader?name=[name].[ext]!./appconfig.json");
+
+
+var output = document.getElementById("output");
+
+var TunnelFound = 0
+
+//loads all images as raw pixel data async, images have to be saved as *.data.png
+//this also takes care of metadata headers in the image that make browser load the image
+//with slightly wrong colors
+//this function is async, so you cant acccess the images instantly but generally takes <20ms
+//use `await imgs.promise` if you want to use the images as soon as they are loaded
+var puzzleimgs = a1lib.ImageDetect.webpackImages(
+	{
+	SqL: require("./Puzzles/SquareLeft.data.png"),
+	SqM: require("./Puzzles/SquareMiddle.data.png"),
+	SqR: require("./Puzzles/SquareRight.data.png"),
+	CTL: require("./Puzzles/CirTriLeft.data.png"),
+	CTM: require("./Puzzles/CirTriMiddle.data.png"),
+	CTR: require("./Puzzles/CirTriRight.data.png"),
+	CoL: require("./Puzzles/CornLeft.data.png"),//
+	CoM: require("./Puzzles/CornMiddle.data.png"),//
+	CoR: require("./Puzzles/CornRight.data.png"),//
+	ToL: require("./Puzzles/TopLeft.data.png"),//
+	ToM: require("./Puzzles/TopMiddle.data.png"),
+	ToR: require("./Puzzles/TopRight.data.png")
+
+	}
+);
+
+var doorimg = a1lib.ImageDetect.webpackImages(
+	{
+	door: require("./DoorLock.data.png")
+	}
+);
+
+
+var slainimg = a1lib.ImageDetect.webpackImages(
+	{
+		slain: require("./Slain.data.png")
+	}
+);
+
+var tunnelimg = a1lib.ImageDetect.webpackImages(
+	{
+		tunnel: require("./HiddenTunnel.data.png")
+	}
+);
+
+var brotherAllimg = a1lib.ImageDetect.webpackImages(
+	{
+		slain: require("./Brothers/AllBros.data.png")
+	}
+);
+
+var brotherimgs = a1lib.ImageDetect.webpackImages(
+	{
+	Ahrim: require("./Brothers/Ahrim.data.png"),
+	Dharok: require("./Brothers/Dharok.data.PNG"),
+	Guthan: require("./Brothers/Guthan.data.png"),
+	Karil: require("./Brothers/Karil.data.png"),
+	Torag: require("./Brothers/Torag.data.png"),
+	Verac: require("./Brothers/Verac.data.png"),	
+	Akrisae: require("./Brothers/Akrisae.data.png"),
+	Linza: require("./Brothers/Linza.data.png")
+	}
+);
+var brotherList = 	{
+	Ahrim: 'Ahrim',
+	Dharok:	'Dharok',
+	Guthan: 'Guthan',
+	Karil:	'Karil',
+	Torag: 	'Torag',
+	Verac: 	'Verac',
+	Akrisae:'Akrisae',
+	Linza: 	'Linza'
+
+	}
+;
+
+
+//(document.getElementById('VeracHTMLimg') as HTMLImageElement).src = './TooltipHeads/verac.png';
+
+
+
+//You can reach exports on window.TEST because of
+//config.makeUmd("testpackage", "TEST"); in webpack.config.ts
+
+/*export function loop()
+{
+	//while (1)
+	//{		
+	start()
+	//}		
+	
+}*/
+
+
+//listen for pasted (ctrl-v) images, usually used in the browser version of an app
+a1lib.PasteInput.listen(img => {
+		
+	//run tunnel check
+	tunnel(img);
+
+	//run slain list image check
+	slainList(img);
+
+	doorLock(img);
+}, (err, errid) => {
+	output.insertAdjacentHTML("beforeend", `<div><b>${errid}</b>  ${err}</div>`);
+});
+
+
+/*function capture() {
+	if (!window.alt1) {
+		output.insertAdjacentHTML("beforeend", `<div>You need to run this page in alt1 to capture the screen</div>`);
+		return;
+	}
+	if (!alt1.permissionPixel) {
+		output.insertAdjacentHTML("beforeend", `<div>Page is not installed as app or capture permission is not enabled</div>`);
+		return;
+	}
+
+
+	
+
+	//capture the screen
+	var img = a1lib.captureHoldFullRs();
+	
+	//run tunnel check
+	tunnel(img);
+
+	//run slain list image check
+	slainList(img);
+
+	doorLock(img);
+}*/
+
+export function start() {
+   
+    setInterval(tick, 50);
+    tick();
+}
+
+function tick() {
+   
+
+	var img = a1lib.captureHoldFullRs();
+	
+	//run tunnel check
+	tunnel(img);
+
+	//run slain list image check
+	slainList(img);
+
+	doorLock(img);
+}
+
+
+function tunnel(img: ImgRef){
+	//Check for the tunnel Message
+	for (const [key] of Object.entries(tunnelimg)) {
+		console.log(tunnelimg[key]);
+		var loc = img.findSubimage(tunnelimg[key]);
+
+		if (window.alt1) {
+			if (loc.length != 0) {
+				
+				//output.insertAdjacentHTML("beforeend", `<div>Tunnel has been found!</div>`);
+				alt1.overLayRect(a1lib.mixColor(0, 255, 0), loc[0].x, loc[0].y, tunnelimg[key]['width'], tunnelimg[key]['height'], 100, 3);
+				//get raw pixels of image and show on screen (used mostly for debug)
+				//var buf = img.toData(loc[0].x-50, loc[0].y-50, 200, 200);
+				//buf.show();
+				TunnelFound = 1
+			} 
+		} 
+	}
+}
+
+
+function slainList(img: ImgRef){
+	var slain = img.findSubimage(slainimg.slain);	
+	//output.insertAdjacentHTML("beforeend", `<div>Searching for Slain list...</div>`);
+	if (window.alt1) {
+		if (slain.length != 0) {
+			//output.insertAdjacentHTML("beforeend", `<div>Found Slain list</div>`);
+			//get raw pixels of image and show on screen (used mostly for debug)
+			//var buf = img.toData(loc[0].x-50, loc[0].y-50, 200, 200);
+			//buf.show();
+			
+			//output.insertAdjacentHTML("beforeend", `<div><br/></div>`);
+			findBrothers(img);
+		} 
+		//else 
+		//{	
+			//output.insertAdjacentHTML("beforeend", `<div>Unable to detect Slain list</div>`);
+		//}
+	}
+}
+
+
+function findBrothers(img: ImgRef) {
+	
+	//output.insertAdjacentHTML("beforeend", `<div>Searching for brothers...</div>`);
+	//output.insertAdjacentHTML("beforeend",`<div>Alt1CaptureRate: ${alt1.captureInterval}</div>`)
+	var anybros = 0
+	var brocount = 0
+	for (const [key] of Object.entries(brotherimgs)) {
+		console.log(brotherimgs[key]);
+		var broloc = img.findSubimage(brotherimgs[key]);
+		
+			//
+		//overlay the result on screen if running in alt1
+		if (window.alt1) {
+			if (broloc.length != 0) {
+				brocount += 1;
+
+				(document.getElementById(`${key}HTMLimg`) as HTMLImageElement).src = `../src/TooltipHeads/${key}Dead.png`
+				
+		//output.insertAdjacentHTML("beforeend", `<div>${([key])} killed</div>`);
+				//alt1.overLayRect(a1lib.mixColor(0, 255, 0), broloc[0].x, broloc[0].y, brotherimgs[key]['width'], brotherimgs[key]['height'], 10000, 3);
+				//get raw pixels of image and show on screen (used mostly for debug)
+				//var buf = img.toData(loc[0].x-50, loc[0].y-50, 200, 200);
+				//buf.show();
+				anybros = 1
+				
+				
+				//remove relevant brother from list
+				delete brotherList[key];
+
+				//grey out each image if the brother is now dead. 
+				/*switch(key) { 
+					case 'Ahrim': { 				
+						var AhrimHTMLimgvar = (document.getElementById('AhrimHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/AhrimDead.png';
+						break; 
+					}	
+					case 'Dharok': { 				
+						var DharokHTMLimgvar = (document.getElementById('DharokHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/DharokDead.png';
+						break; 
+					}	
+					case 'Guthan': { 				
+						var GuthanHTMLimgvar = (document.getElementById('GuthanHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/GuthanDead.png';
+						break; 
+					}	
+					case 'Karil': { 				
+						var KarilHTMLimgvar = (document.getElementById('KarilHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/KarilDead.png';
+						break; 
+					}	
+					case 'Torag': { 				
+						var ToragHTMLimgvar = (document.getElementById('ToragHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/ToragDead.png';
+						break; 
+					}	
+					case 'Verac': { 
+					var VeracHTMLimgvar = (document.getElementById('VeracHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/VeracDead.png';
+						break; 
+					} 
+					case 'Akrisae': { 				
+						var AkrisaeHTMLimgvar = (document.getElementById('AkrisaeHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/AkrisaeDead.png';
+						break; 
+					}	
+					case 'Linza': { 				
+						var LinzaHTMLimgvar = (document.getElementById('LinzaHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/LinzaDead.png';
+						break; 
+					}	
+				}*/
+				
+			} 
+		} 
+		if (brocount ==0)
+		{
+		var text = document.getElementById('Status').textContent = brocount + " brothers slain, Keep going!";
+		//reset the images
+		(document.getElementById(`${key}HTMLimg`) as HTMLImageElement).src = `../src/TooltipHeads/${key}.png`
+		/*var AhrimHTMLimgvar = (document.getElementById('AhrimHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Ahrim.png';
+		var DharokHTMLimgvar = (document.getElementById('DharokHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Dharok.png';
+		var GuthanHTMLimgvar = (document.getElementById('GuthanHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Guthan.png';
+		var KarilHTMLimgvar = (document.getElementById('KarilHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Karil.png';
+		var ToragHTMLimgvar = (document.getElementById('ToragHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Torag.png';
+		var VeracHTMLimgvar = (document.getElementById('VeracHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Verac.png';
+		var AkrisaeHTMLimgvar = (document.getElementById('AkrisaeHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Akrisae.png';
+		var LinzaHTMLimgvar = (document.getElementById('LinzaHTMLimg') as HTMLImageElement).src = '../src/TooltipHeads/Linza.png';*/
+		}
+	}
+	
+	if (brocount ==1)
+	{
+	var text = document.getElementById('Status').textContent = brocount + " brother slain, Keep going!";
+	}
+	if (brocount < 7 && brocount != 1)
+	{
+	var text = document.getElementById('Status').textContent = brocount + " brothers slain, Keep going!";
+	}
+	if (brocount == 7)
+	{
+		
+	var text = document.getElementById('Status').textContent = brocount + " brothers slain, enter the tunnel at " + Object.keys(brotherList)  +"'s tomb";
+	}
+
+	if (brocount == 8)
+	{
+	var text = document.getElementById('Status').textContent = "All brothers have been slain, go and loot the chest.";
+	}	
+	//output.insertAdjacentHTML("beforeend", `<br/>`);
+
+	//if  (anybros == 0 ){
+			//output.insertAdjacentHTML("beforeend", `<div>No brothers killed, start of run.</div>`);
+	//}
+	//else{
+		//output.insertAdjacentHTML("beforeend", `<div>${brocount} Brothers killed</div>`);
+	//}
+	
+	//display remainnig brothers
+				
+	//output.insertAdjacentHTML("beforeend", `<br/>`);
+	//output.insertAdjacentHTML("beforeend", `Brothers Remaining: ${Object.keys(brotherList)} `);
+}
+//output.insertAdjacentHTML("beforeend", `<div><br/></div>`);
+
+
+
+function doorLock(img:ImgRef){
+var Doorloc = img.findSubimage(doorimg.door);	
+	//output.insertAdjacentHTML("beforeend", `<div>Searching for Door Lock Screen...</div>`);
+	if (window.alt1) {
+		if (Doorloc.length != 0) {
+			//output.insertAdjacentHTML("beforeend", `<div>Found Door Lock Screen</div>`);
+			//get raw pixels of image and show on screen (used mostly for debug)
+			//var buf = img.toData(loc[0].x-50, loc[0].y-50, 200, 200);
+			//buf.show();
+			
+			findshape(img);
+			} 
+		//else 
+		//{
+			
+			//output.insertAdjacentHTML("beforeend", `<div>Unable to detect Door Lock Screen</div>`);
+		//}
+	}	
+}
+
+
+function findshape(img: ImgRef) {
+	
+	//output.insertAdjacentHTML("beforeend", `<div>Searching for shape...</div>`);
+	//output.insertAdjacentHTML("beforeend",`<div>Alt1CaptureRate: ${alt1.captureInterval}</div>`)
+	for (const [key] of Object.entries(puzzleimgs)) {
+		console.log(puzzleimgs[key]);
+		var loc = img.findSubimage(puzzleimgs[key]);
+
+
+		//overlay the result on screen if running in alt1
+		if (window.alt1) {
+			if (loc.length != 0) {
+				
+				//output.insertAdjacentHTML("beforeend", `<div>Shape found!</div>`);
+				alt1.overLayRect(a1lib.mixColor(0, 255, 0), loc[0].x, loc[0].y, puzzleimgs[key]['width'], puzzleimgs[key]['height'], 300, 3);
+				//get raw pixels of image and show on screen (used mostly for debug)
+				//var buf = img.toData(loc[0].x-50, loc[0].y-50, 200, 200);
+				//buf.show();
+				break;
+			} 
+		} 
+		else 
+		{
+			
+			//output.insertAdjacentHTML("beforeend", `<div>Unable to detect correct answer shape</div>`);
+		}
+	}
+		
+	//output.insertAdjacentHTML("beforeend", `<div><br/></div>`);
+}
+
+	
+//print text world
+//also the worst possible example of how to use global exposed exports as described in webpack.config.json
+
+/*output.insertAdjacentHTML("beforeend", `
+		
+	`
+);*/
+
+//check if we are running inside alt1 by checking if the alt1 global exists
+if (window.alt1) {
+	//tell alt1 about the app
+	//this makes alt1 show the add app button when running inside the embedded browser
+	//also updates app settings if they are changed
+	alt1.identifyAppUrl("./appconfig.json");
+}

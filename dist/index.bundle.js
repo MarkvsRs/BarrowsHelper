@@ -2059,16 +2059,6 @@ module.exports=(__webpack_require__(/*! @alt1/base */ "../node_modules/@alt1/bas
 
 /***/ }),
 
-/***/ "./Brothers/AllBros.data.PNG":
-/*!***********************************!*\
-  !*** ./Brothers/AllBros.data.PNG ***!
-  \***********************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports=(__webpack_require__(/*! @alt1/base */ "../node_modules/@alt1/base/dist/index.js").ImageDetect.imageDataFromBase64)("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")
-
-/***/ }),
-
 /***/ "./Brothers/Dharok.data.PNG":
 /*!**********************************!*\
   !*** ./Brothers/Dharok.data.PNG ***!
@@ -3571,6 +3561,7 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "changesettings": () => (/* binding */ changesettings),
+/* harmony export */   "changerefresh": () => (/* binding */ changerefresh),
 /* harmony export */   "start": () => (/* binding */ start)
 /* harmony export */ });
 /* harmony import */ var _alt1_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @alt1/base */ "../node_modules/@alt1/base/dist/index.js");
@@ -3589,6 +3580,9 @@ var img;
 var imgdoor;
 var brocount = 0;
 var toKill = 8;
+var refreshrate = 100;
+var storedrefreshrate = 100;
+var interval;
 //loads all images as raw pixel data async, images have to be saved as *.data.PNG
 //this also takes care of metadata headers in the image that make browser load the image
 //with slightly wrong colors
@@ -3609,9 +3603,6 @@ var doorimg = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.ImageDetect.webpackImages(
 });
 var slainimg = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.ImageDetect.webpackImages({
     slain: __webpack_require__(/*! ./Misc/Slain.data.PNG */ "./Misc/Slain.data.PNG")
-});
-var brotherAllimg = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.ImageDetect.webpackImages({
-    slain: __webpack_require__(/*! ./Brothers/AllBros.data.PNG */ "./Brothers/AllBros.data.PNG")
 });
 var brotherimgs = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.ImageDetect.webpackImages({
     Ahrim: __webpack_require__(/*! ./Brothers/Ahrim.data.PNG */ "./Brothers/Ahrim.data.PNG"),
@@ -3681,16 +3672,26 @@ function changesettings(toggle) {
         brotherListnonselect[toggle.id] = [toggle.id];
         toKill = ObjectLength(brotherListselect);
     }
+    return;
+}
+;
+function changerefresh(refresh) {
+    storedrefreshrate = refresh.value;
+    refreshrate = storedrefreshrate;
+    clearInterval(interval);
+    start();
+    return;
 }
 ;
 //Webpage calls this function here.
 function start() {
     //Set effective refresh rate (todo, customise this rate)
-    setInterval(tick, 100);
+    interval = setInterval(tick, refreshrate);
     tick();
 }
 function tick() {
     //grab the rs window capture
+    console.log(refreshrate);
     img = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.captureHoldFullRs();
     //run at barrows check/reset brother list. 
     atbarrows(img);
@@ -3708,6 +3709,12 @@ function atbarrows(img) {
             //brotherList = fullbrotherList
             //reset brocount (used so that the count doesn't go out of control after each run/tele out)	
             brocount = 0;
+            if (refreshrate < 100) {
+                refreshrate = storedrefreshrate;
+                clearInterval(interval);
+                start();
+                return;
+            }
             for (const [key] of Object.entries(brotherimgs)) {
                 //blank out brother images
                 document.getElementById(`${key}HTMLimg`).src = `./TooltipHeads/${key}Dead.PNG`;
@@ -3720,6 +3727,7 @@ function atbarrows(img) {
             doorLock(img);
         }
     }
+    return;
 }
 function findBrothers(img) {
     //set this here so the count doesnt keep going up each loop round
@@ -3780,12 +3788,19 @@ function findBrothers(img) {
     if (brocount == 8) {
         var text = document.getElementById('Status').textContent = "All brothers have been slain, go and loot the chest.";
     }
+    return;
 }
 function doorLock(img) {
     var Doorloc = img.findSubimage(doorimg.door);
     //only run if door lock window is on screen, saves on performance
     if (window.alt1) {
         if (Doorloc.length != 0) {
+            if (refreshrate != 50) {
+                refreshrate = 50;
+                clearInterval(interval);
+                start();
+                return;
+            }
             img = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.captureHoldFullRs();
             getDiffCoTo(img); //remove when putting consisten check back in
             img = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.captureHoldFullRs();
@@ -3793,7 +3808,14 @@ function doorLock(img) {
             img = _alt1_base__WEBPACK_IMPORTED_MODULE_0__.captureHoldFullRs();
             getDiffCT(img); //remove when putting consisten check back in
         }
+        if (Doorloc.length == 0 && refreshrate == 50) {
+            refreshrate = storedrefreshrate;
+            clearInterval(interval);
+            start();
+            return;
+        }
     }
+    return;
 }
 function getDiffCoTo(img) {
     //finds door lock mech window from main image
@@ -3854,6 +3876,7 @@ function getDiffCoTo(img) {
             }
         }
     }
+    return;
 }
 function getDiffSq(img) {
     //finds door lock mech window from main image
@@ -3914,6 +3937,7 @@ function getDiffSq(img) {
             }
         }
     }
+    return;
 }
 function getDiffCT(img) {
     //finds door lock mech window from main image
@@ -3974,6 +3998,7 @@ function getDiffCT(img) {
             }
         }
     }
+    return;
 }
 if (window.alt1) {
     alt1.identifyAppUrl("./appconfig.json");

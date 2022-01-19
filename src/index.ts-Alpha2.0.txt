@@ -1,0 +1,246 @@
+//alt1 base libs, provides all the commonly used methods for image matching and capture
+//also gives your editor info about the window.alt1 api
+import * as a1lib from "@alt1/base";
+import { ImgRef } from "@alt1/base";
+import { lookup } from "dns";
+import { stringify } from "querystring";
+
+//tell webpack to add index.html and appconfig.json to output
+require("!file-loader?name=[name].[ext]!./index.html");
+require("!file-loader?name=[name].[ext]!./appconfig.json");
+
+
+var output = document.getElementById("output");
+
+var TunnelFound = 0
+var brocount = 0
+var toKill = 8
+
+//loads all images as raw pixel data async, images have to be saved as *.data.png
+//this also takes care of metadata headers in the image that make browser load the image
+//with slightly wrong colors
+//this function is async, so you cant acccess the images instantly but generally takes <20ms
+//use `await imgs.promise` if you want to use the images as soon as they are loaded
+var puzzleimgs = a1lib.ImageDetect.webpackImages(
+	{
+	SqL: require("./Puzzles/SquareLeft.data.png"),
+	SqM: require("./Puzzles/SquareMiddle.data.png"),
+	SqR: require("./Puzzles/SquareRight.data.png"),
+	CTL: require("./Puzzles/CirTriLeft.data.png"),
+	CTM: require("./Puzzles/CirTriMiddle.data.png"),
+	CTR: require("./Puzzles/CirTriRight.data.png"),
+	CoL: require("./Puzzles/CornLeft.data.png"),//
+	CoM: require("./Puzzles/CornMiddle.data.png"),//
+	CoR: require("./Puzzles/CornRight.data.png"),//
+	ToL: require("./Puzzles/TopLeft.data.png"),//
+	ToM: require("./Puzzles/TopMiddle.data.png"),
+	ToR: require("./Puzzles/TopRight.data.png")
+
+	}
+);
+
+var doorimg = a1lib.ImageDetect.webpackImages(
+	{
+	door: require("./DoorLock.data.png")
+	}
+);
+
+var slainimg = a1lib.ImageDetect.webpackImages(
+	{
+		slain: require("./Slain.data.png")
+	}
+);
+
+var tunnelimg = a1lib.ImageDetect.webpackImages(
+	{
+		tunnel: require("./HiddenTunnel.data.png")
+	}
+);
+
+var brotherAllimg = a1lib.ImageDetect.webpackImages(
+	{
+		slain: require("./Brothers/AllBros.data.png")
+	}
+);
+
+var brotherimgs = a1lib.ImageDetect.webpackImages(
+	{
+	Ahrim: require("./Brothers/Ahrim.data.png"),
+	Dharok: require("./Brothers/Dharok.data.PNG"),
+	Guthan: require("./Brothers/Guthan.data.png"),
+	Karil: require("./Brothers/Karil.data.png"),
+	Torag: require("./Brothers/Torag.data.png"),
+	Verac: require("./Brothers/Verac.data.png"),	
+	Akrisae: require("./Brothers/Akrisae.data.png"),
+	Linza: require("./Brothers/Linza.data.png")
+	}
+);
+var brotherList = 	{
+	Ahrim: 'Ahrim',
+	Dharok:	'Dharok',
+	Guthan: 'Guthan',
+	Karil:	'Karil',
+	Torag: 	'Torag',
+	Verac: 	'Verac',
+	Akrisae:'Akrisae',
+	Linza: 	'Linza'
+	}
+;
+
+//Webpage calls this function here.
+export function start() {
+	//Set effective refresh rate (todo, customise this rate)
+    setInterval(tick,100); 
+	    
+	tick(); 
+}
+
+function tick() {
+   	//grab the rs window capture
+	var img = a1lib.captureHoldFullRs();
+	//run at barrows check/reset brother list. 
+	atbarrows(img);
+	
+}
+
+//left in incase tunnel recognition can be used somehow. 
+/*function tunnel(img: ImgRef){
+	//Check for the tunnel Message
+	for (const [key] of Object.entries(tunnelimg)) {
+		console.log(tunnelimg[key]);
+		var loc = img.findSubimage(tunnelimg[key]);
+
+	
+		if (loc.length != 0) {
+			
+			alt1.overLayRect(a1lib.mixColor(0, 255, 0), loc[0].x, loc[0].y, tunnelimg[key]['width'], tunnelimg[key]['height'], 100, 3);
+		
+			TunnelFound = 1
+		} 
+		
+	}
+}*/
+
+function atbarrows(img: ImgRef){
+	//Check Brothers slain list header
+	for (const [key] of Object.entries(slainimg)) {
+		var loc = img.findSubimage(slainimg[key]);
+	
+		if (loc.length == 0){
+			//change status in alt1 browser to "Not at barrows"
+			var text = document.getElementById('Status').textContent =  "Not at barrows";
+				//reset brother list.
+				brotherList = 	{
+				Ahrim: 'Ahrim',
+				Dharok:	'Dharok',
+				Guthan: 'Guthan',
+				Karil:	'Karil',
+				Torag: 	'Torag',
+				Verac: 	'Verac',
+				Akrisae:'Akrisae',
+				Linza: 	'Linza'
+				}
+				//reset brocount (used so that the count doesn't go out of control after each run/tele out)	
+				brocount = 0;
+
+				for (const [key] of Object.entries(brotherimgs)) {						
+					//blank out brother images
+					(document.getElementById(`${key}HTMLimg`) as HTMLImageElement).src = `./nis/alt1-currentskin/background.png`
+				}
+		}
+		if (loc.length != 0){
+			//only run if up to all but 1 bro is killed, once all killed last run will increase count.
+			if (brocount <= toKill-1)
+			{
+				findBrothers(img);
+			}
+
+			//run puzzle
+			//No point running puzzle until all but 1 selected bro's killed
+			if (brocount >= toKill-1)
+			{
+				doorLock(img);
+			}
+		}		
+	}
+}
+
+function findBrothers(img: ImgRef) {
+	//set this here so the count doesnt keep going up each loop round
+	brocount = 0
+	for (const [key] of Object.entries(brotherimgs)) {
+		
+		var broloc = img.findSubimage(brotherimgs[key]);
+					
+			//search for brother names in killcount list.
+			if (broloc.length != 0) {
+				//increase kill counter
+				brocount += 1;
+				//replace image with greyed out version if brother name found in list
+				(document.getElementById(`${key}HTMLimg`) as HTMLImageElement).src = `../src/TooltipHeads/${key}Dead.png`
+								
+				//remove relevant brother from brother list - used to display which brother is left when showing tunnel location
+				delete brotherList[key];			
+			} 
+			if (broloc.length == 0){
+				//Display coloured version of the brother image, as they are not dead yet
+				(document.getElementById(`${key}HTMLimg`) as HTMLImageElement).src = `../src/TooltipHeads/${key}.png`
+			}
+	}
+	
+	//display brothers killed/tomb location/go loot the chest
+	if (brocount ==1)
+	{
+	var text = document.getElementById('Status').textContent = brocount + " brother slain, Keep going!";
+	}
+	if (brocount < toKill-1 && brocount != 1)
+	{
+	var text = document.getElementById('Status').textContent = brocount + " brothers slain, Keep going!";
+	}
+	if (brocount == toKill-1)
+	{
+	var text = document.getElementById('Status').textContent = brocount + " brothers slain, enter the tunnel at " + Object.keys(brotherList)  +"'s tomb";
+	}
+	if (brocount == toKill)
+	{
+	var text = document.getElementById('Status').textContent = "All brothers have been slain, go and loot the chest.";
+	}	
+}	
+
+
+
+function doorLock(img:ImgRef){
+	var Doorloc = img.findSubimage(doorimg.door);	
+	//only run if door lock window is on screen, saves on performance
+	if (window.alt1) {
+		if (Doorloc.length != 0) {
+			findshape(img);
+		} 	
+	}
+	
+}
+
+function findshape(img: ImgRef) {
+	for (const [key] of Object.entries(puzzleimgs)) {
+		var loc = img.findSubimage(puzzleimgs[key]);
+		//overlay the result on screen if running in alt1
+		if (window.alt1) {
+			if (loc.length != 0) {
+				//border the found puzzle answer with a green  (todo - customize colour) border.
+				alt1.overLayRect(a1lib.mixColor(0, 255, 0), loc[0].x, loc[0].y, puzzleimgs[key]['width'], puzzleimgs[key]['height'], 300, 3);
+				//jump out if image is found, saves going through the whole list every time.
+				break;			
+			} 
+		} 
+	}
+}
+
+/*output.insertAdjacentHTML("beforeend", `
+		
+	`
+);*/
+
+//check if we are running inside alt1 by checking if the alt1 global exists
+if (window.alt1) {
+	alt1.identifyAppUrl("./appconfig.json");
+}
