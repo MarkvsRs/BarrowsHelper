@@ -2219,15 +2219,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "../../../../../node_modules/canvas/browser.js":
-/*!*****************************************************!*\
-  !*** ../../../../../node_modules/canvas/browser.js ***!
-  \*****************************************************/
+/***/ "../../../../node_modules/canvas/browser.js":
+/*!**************************************************!*\
+  !*** ../../../../node_modules/canvas/browser.js ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 /* globals document, ImageData */
 
-const parseFont = __webpack_require__(/*! ./lib/parse-font */ "../../../../../node_modules/canvas/lib/parse-font.js")
+const parseFont = __webpack_require__(/*! ./lib/parse-font */ "../../../../node_modules/canvas/lib/parse-font.js")
 
 exports.parseFont = parseFont
 
@@ -2264,10 +2264,10 @@ exports.loadImage = function (src, options) {
 
 /***/ }),
 
-/***/ "../../../../../node_modules/canvas/lib/parse-font.js":
-/*!************************************************************!*\
-  !*** ../../../../../node_modules/canvas/lib/parse-font.js ***!
-  \************************************************************/
+/***/ "../../../../node_modules/canvas/lib/parse-font.js":
+/*!*********************************************************!*\
+  !*** ../../../../node_modules/canvas/lib/parse-font.js ***!
+  \*********************************************************/
 /***/ ((module) => {
 
 "use strict";
@@ -2377,10 +2377,10 @@ module.exports = function (str) {
 
 /***/ }),
 
-/***/ "../../../../../node_modules/resemblejs/resemble.js":
-/*!**********************************************************!*\
-  !*** ../../../../../node_modules/resemblejs/resemble.js ***!
-  \**********************************************************/
+/***/ "../../../../node_modules/resemblejs/resemble.js":
+/*!*******************************************************!*\
+  !*** ../../../../node_modules/resemblejs/resemble.js ***!
+  \*******************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -2448,7 +2448,7 @@ var isNode = function () {
     var loadNodeCanvasImage;
 
     if (isNode()) {
-        Canvas = __webpack_require__(/*! canvas */ "../../../../../node_modules/canvas/browser.js"); // eslint-disable-line global-require
+        Canvas = __webpack_require__(/*! canvas */ "../../../../node_modules/canvas/browser.js"); // eslint-disable-line global-require
         Img = Canvas.Image;
         loadNodeCanvasImage = Canvas.loadImage;
     } else {
@@ -3574,7 +3574,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "start": () => (/* binding */ start)
 /* harmony export */ });
 /* harmony import */ var _alt1_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @alt1/base */ "../node_modules/@alt1/base/dist/index.js");
-/* harmony import */ var resemblejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! resemblejs */ "../../../../../node_modules/resemblejs/resemble.js");
+/* harmony import */ var resemblejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! resemblejs */ "../../../../node_modules/resemblejs/resemble.js");
 /* harmony import */ var resemblejs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(resemblejs__WEBPACK_IMPORTED_MODULE_1__);
 //alt1 base libs, provides all the commonly used methods for image matching and capture
 //also gives your editor info about the window.alt1 api
